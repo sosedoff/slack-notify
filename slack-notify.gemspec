@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'slack/notify/version'
+require 'slack-notify/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "slack-notify"
-  spec.version       = Slack::Notify::VERSION
+  spec.version       = SlackNotify::VERSION
   spec.authors       = ["Dan Sosedoff"]
   spec.email         = ["dan.sosedoff@gmail.com"]
   spec.description   = %q{TODO: Write a gem description}
