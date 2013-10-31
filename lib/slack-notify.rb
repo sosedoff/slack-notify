@@ -17,11 +17,7 @@ module SlackNotify
     end
 
     def test
-      send_payload(
-        text: "This is a test message!",
-        channel: @channel,
-        username: @username
-      )
+      notify("This is a test message!")
     end
 
     def notify(text, channel=nil)
