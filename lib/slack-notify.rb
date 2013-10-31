@@ -10,7 +10,7 @@ module SlackNotify
       @subdomain = subdomain
       @token     = token
       @username  = options[:username] || "webhookbot"
-      @channel   = options[:channel] || "general"
+      @channel   = options[:channel] || "#general"
 
       raise ArgumentError, "Subdomain required" if @subdomain.nil?
       raise ArgumentError, "Token required"     if @token.nil?
