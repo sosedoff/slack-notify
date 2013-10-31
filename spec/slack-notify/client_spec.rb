@@ -85,5 +85,32 @@ describe SlackNotify::Client do
 
       expect(client.notify("Message")).to eq true
     end
+
+    context "invalid subdomain" do
+      before do
+        stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
+         with(:body => {"{\"text\":\"Message\",\"channel\":\"#general\",\"username\":\"webhookbot\"}"=>true},
+              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.8.8'}).
+         to_return(:status => 404, :body => "Multi line\ncontent\nhtml stuff", :headers => {})
+      end
+
+      it "raises error" do
+        expect { client.notify("Message") }.to raise_error SlackNotify::Error
+      end
+    end
+
+    context "invalid token" do
+      before do
+        stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
+         with(:body => {"{\"text\":\"Message\",\"channel\":\"#general\",\"username\":\"webhookbot\"}"=>true},
+              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.8.8'}).
+         to_return(:status => 404, :body => "No hooks", :headers => {})
+      end
+
+      it "raises error" do
+        expect { client.notify("Message") }
+          .to raise_error SlackNotify::Error, "No hooks"
+      end
+    end
   end
 end

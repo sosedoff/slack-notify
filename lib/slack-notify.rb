@@ -41,7 +41,11 @@ module SlackNotify
       if response.success?
         true
       else
-        raise SlackNotify::Error.new(response.body)
+        if response.body.include?("\n")
+          raise SlackNotify::Error
+        else
+          raise SlackNotify::Error.new(response.body)
+        end
       end
     end
   end
