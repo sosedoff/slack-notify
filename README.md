@@ -1,29 +1,59 @@
-# Slack::Notify
+# slack-notify
 
-TODO: Write a gem description
+Send notifications to [Slack](http://slack.com/)
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'slack-notify'
+```
+gem "slack-notify"
+```
 
 And then execute:
 
-    $ bundle
+```
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install slack-notify
+```
+$ gem install slack-notify
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+Require:
 
-## Contributing
+```ruby
+require "slack-notify"
+```
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+Initialize client:
+
+```ruby
+client = SlackNotify::Client.new("subdomain", "token")
+```
+
+Initialize with options:
+
+```ruby
+client = SlackNotify::Client.new("subdomain", "token", {
+  channel: "#development",
+  username: "mybot"
+})
+```
+
+Send test request:
+
+```ruby
+client.test
+```
+
+Send message:
+
+```ruby
+client.notify("Hello There!")
+client.notify("Another message", "#channel2")
+```
