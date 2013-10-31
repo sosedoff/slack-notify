@@ -21,7 +21,7 @@ describe SlackNotify::Client do
     let(:payload) do
       {
         text: "This is a test message!",
-        channel: "general",
+        channel: "#general",
         username: "webhookbot"
       }
     end
@@ -46,7 +46,7 @@ describe SlackNotify::Client do
 
       expect(client).to receive(:send_payload).with(
         text: "Message",
-        channel: "general",
+        channel: "#general",
         username: "webhookbot"
       )
 
@@ -58,7 +58,7 @@ describe SlackNotify::Client do
 
       expect(client).to receive(:send_payload).with(
         text: "Message",
-        channel: "general",
+        channel: "#general",
         username: "webhookbot"
       )
 
@@ -70,16 +70,16 @@ describe SlackNotify::Client do
 
       expect(client).to receive(:send_payload).with(
         text: "Message",
-        channel: "mychannel",
+        channel: "#mychannel",
         username: "webhookbot"
       )
 
-      client.notify("Message", "mychannel")
+      client.notify("Message", "#mychannel")
     end
 
     it "delivers payload" do
-      stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook").
-         with(:body => {"{\"text\":\"Message\",\"channel\":\"general\",\"username\":\"webhookbot\"}"=>true},
+      stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
+         with(:body => {"{\"text\":\"Message\",\"channel\":\"#general\",\"username\":\"webhookbot\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.8.8'}).
          to_return(:status => 200, :body => "", :headers => {})
 
