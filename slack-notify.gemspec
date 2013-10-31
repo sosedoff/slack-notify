@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = SlackNotify::VERSION
   spec.authors       = ["Dan Sosedoff"]
   spec.email         = ["dan.sosedoff@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{Send notifications to Slack channel}
+  spec.summary       = %q{Send notifications to Slack channel}
   spec.homepage      = ""
   spec.license       = "MIT"
 

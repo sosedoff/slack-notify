@@ -1,4 +1,6 @@
 require "slack-notify/version"
+require "slack-notify/error"
+
 require "json"
 require "faraday"
 
