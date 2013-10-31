@@ -35,7 +35,10 @@ module SlackNotify
     private
 
     def send_payload(payload)
-      response = Faraday.post(url, token: @token) do |req|
+      url = "https://#{@subdomain}.slack.com/services/hooks/incoming-webhook"
+      url << "?token=#{@token}"
+
+      response = Faraday.post(url) do |req|
         req.body = JSON.dump(payload)
       end
 
@@ -44,10 +47,6 @@ module SlackNotify
       else
         raise SlackNotify::Error.new(response.body)
       end
-    end
-
-    def url
-      "https://#{@subdomain}.slack.com/services/hooks/incoming-webhook"
     end
   end
 end
