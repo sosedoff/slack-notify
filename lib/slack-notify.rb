@@ -21,11 +21,11 @@ module SlackNotify
     end
 
     def notify(text, channel=nil)
-      send_payload(
-        text: text,
-        channel: channel || @channel,
-        username: @username
-      )
+      channels = [channel || @channel].flatten.compact.uniq
+
+      channels.each do |chan|
+        send_payload(text: text, username: @username, channel: chan)
+      end
     end
 
     private
