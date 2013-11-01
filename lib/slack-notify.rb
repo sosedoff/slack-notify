@@ -6,13 +6,13 @@ require "faraday"
 
 module SlackNotify
   class Client
-    def initialize(subdomain, token, options={})
-      @subdomain = subdomain
-      @token     = token
-      @username  = options[:username] || "webhookbot"
-      @channel   = options[:channel] || "#general"
+    def initialize(team, token, options={})
+      @team     = team
+      @token    = token
+      @username = options[:username] || "webhookbot"
+      @channel  = options[:channel] || "#general"
 
-      raise ArgumentError, "Subdomain required" if @subdomain.nil?
+      raise ArgumentError, "Subdomain required" if @team.nil?
       raise ArgumentError, "Token required"     if @token.nil?
     end
 
@@ -31,7 +31,7 @@ module SlackNotify
     private
 
     def send_payload(payload)
-      url = "https://#{@subdomain}.slack.com/services/hooks/incoming-webhook"
+      url = "https://#{@team}.slack.com/services/hooks/incoming-webhook"
       url << "?token=#{@token}"
 
       response = Faraday.post(url) do |req|
