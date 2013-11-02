@@ -86,6 +86,17 @@ describe SlackNotify::Client do
       expect(client.notify("Message")).to eq true
     end
 
+    context "with multiple channels" do
+      before do
+        client.stub(:send_payload) { true }
+      end
+
+      it "delivers payload to multiple channels" do
+        expect(client).to receive(:send_payload).exactly(2).times
+        client.notify("Message", ["#channel1", "#channel2"])
+      end
+    end
+
     context "when team name is invalid" do
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
