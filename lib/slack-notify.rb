@@ -26,6 +26,8 @@ module SlackNotify
       channels.each do |chan|
         send_payload(text: text, username: @username, channel: chan)
       end
+
+      true
     end
 
     private

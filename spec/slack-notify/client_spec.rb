@@ -2,9 +2,9 @@ require "spec_helper"
 
 describe SlackNotify::Client do
   describe "#initialize" do
-    it "requires subdomain" do
+    it "requires team name" do
       expect { described_class.new(nil, nil) }.
-        to raise_error ArgumentError, "Subdomain required"
+        to raise_error ArgumentError, "Team name required"
     end
 
     it "requires token" do
@@ -79,19 +79,19 @@ describe SlackNotify::Client do
 
     it "delivers payload" do
       stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
-         with(:body => {"{\"text\":\"Message\",\"channel\":\"#general\",\"username\":\"webhookbot\"}"=>true},
+         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.8.8'}).
          to_return(:status => 200, :body => "", :headers => {})
 
       expect(client.notify("Message")).to eq true
     end
 
-    context "invalid subdomain" do
+    context "when team name is invalid" do
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
-         with(:body => {"{\"text\":\"Message\",\"channel\":\"#general\",\"username\":\"webhookbot\"}"=>true},
+         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.8.8'}).
-         to_return(:status => 404, :body => "Multi line\ncontent\nhtml stuff", :headers => {})
+         to_return(:status => 404, :body => "Line 1\nLine 2\nLine 3", :headers => {})
       end
 
       it "raises error" do
@@ -99,12 +99,12 @@ describe SlackNotify::Client do
       end
     end
 
-    context "invalid token" do
+    context "when token is invalid" do
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
-         with(:body => {"{\"text\":\"Message\",\"channel\":\"#general\",\"username\":\"webhookbot\"}"=>true},
+         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.8.8'}).
-         to_return(:status => 404, :body => "No hooks", :headers => {})
+         to_return(:status => 400, :body => "No hooks", :headers => {})
       end
 
       it "raises error" do
