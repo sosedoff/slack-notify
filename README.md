@@ -33,13 +33,13 @@ require "slack-notify"
 Initialize client:
 
 ```ruby
-client = SlackNotify::Client.new("subdomain", "token")
+client = SlackNotify::Client.new("team", "token")
 ```
 
 Initialize with options:
 
 ```ruby
-client = SlackNotify::Client.new("subdomain", "token", {
+client = SlackNotify::Client.new("team", "token", {
   channel: "#development",
   username: "mybot"
 })
@@ -56,6 +56,7 @@ Send message:
 ```ruby
 client.notify("Hello There!")
 client.notify("Another message", "#channel2")
+client.notify("Message", ["#channel1", "#channel2"])
 ```
 
 ## Gotchas
