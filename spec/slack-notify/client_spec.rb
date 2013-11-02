@@ -97,6 +97,15 @@ describe SlackNotify::Client do
       end
     end
 
+    context "when pound symbol is missing" do
+      before { client.stub(:send_payload).and_return(true) }
+
+      it "adds pound symbol to channel name" do
+        expect(client).to receive(:send_payload).with(text: "Message", username: "webhookbot", channel: "#foobar")
+        client.notify("Message", "foobar")
+      end
+    end
+
     context "when team name is invalid" do
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
