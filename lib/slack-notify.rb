@@ -34,7 +34,12 @@ module SlackNotify
     private
 
     def send_payload(payload)
-      response = Faraday.post(hook_url) do |req|
+      conn = Faraday.new(hook_url, { timeout: 5, open_timeout: 5 }) do |c|
+        c.use(Faraday::Request::UrlEncoded)
+        c.adapter(Faraday.default_adapter)
+      end
+
+      response = conn.post do |req|
         req.body = JSON.dump(payload)
       end
 
