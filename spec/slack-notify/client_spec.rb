@@ -124,12 +124,26 @@ describe SlackNotify::Client do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
          with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.8.8'}).
-         to_return(:status => 400, :body => "No hooks", :headers => {})
+         to_return(:status => 500, :body => "No hooks", :headers => {})
       end
 
       it "raises error" do
         expect { client.notify("Message") }
           .to raise_error SlackNotify::Error, "No hooks"
+      end
+    end
+
+    context "when channel is invalid" do
+      before do
+        stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
+         with(:body => {"{\"text\":\"message\",\"username\":\"webhookbot\",\"channel\":\"#foobar\"}"=>true},
+              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.8.8'}).
+         to_return(:status => 500, :body => "Invalid channel specified", :headers => {})
+      end
+
+      it "raises error" do
+        expect { client.notify("message", "foobar") }.
+          to raise_error SlackNotify::Error, "Invalid channel specified"
       end
     end
   end
