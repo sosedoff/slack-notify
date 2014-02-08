@@ -43,9 +43,11 @@ module SlackNotify
         req.body = JSON.dump(payload)
       end
 
-      if response.success?
-        true
-      else
+      handle_response(response)
+    end
+
+    def handle_response(response)
+      unless response.success?
         if response.body.include?("\n")
           raise SlackNotify::Error
         else
