@@ -10,7 +10,7 @@ module SlackNotify
       @team     = team
       @token    = token
       @username = options[:username] || "webhookbot"
-      @channel  = options[:channel] || "#general"
+      @channel  = options[:channel]  || "#general"
 
       raise ArgumentError, "Team name required" if @team.nil?
       raise ArgumentError, "Token required"     if @token.nil?
