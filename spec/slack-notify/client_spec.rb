@@ -11,6 +11,15 @@ describe SlackNotify::Client do
       expect { described_class.new("foobar", nil) }.
         to raise_error ArgumentError, "Token required"
     end
+
+    it "raises error on invalid team name" do
+      names = ["foo bar", "foo $bar", "foo.bar"]
+
+      names.each do |name|
+        expect { described_class.new(name, "token") }.
+          to raise_error "Invalid team name"
+      end
+    end
   end
 
   describe "#test" do

@@ -6,7 +6,7 @@ require "faraday"
 
 module SlackNotify
   class Client
-    def initialize(team, token, options={})
+    def initialize(team, token, options = {})
       @team     = team
       @token    = token
       @username = options[:username] || "webhookbot"
@@ -14,13 +14,14 @@ module SlackNotify
 
       raise ArgumentError, "Team name required" if @team.nil?
       raise ArgumentError, "Token required"     if @token.nil?
+      raise ArgumentError, "Invalid team name"  unless valid_team_name?
     end
 
     def test
       notify("This is a test message!")
     end
 
-    def notify(text, channel=nil)
+    def notify(text, channel = nil)
       channels = [channel || @channel].flatten.compact.uniq
 
       channels.each do |chan|
@@ -56,8 +57,16 @@ module SlackNotify
       end
     end
 
+    def valid_team_name?
+      @team =~ /^[a-z\d\-]+$/ ? true : false
+    end
+
     def hook_url
-      "https://#{@team}.slack.com/services/hooks/incoming-webhook?token=#{@token}"
+      "#{base_url}/services/hooks/incoming-webhook?token=#{@token}"
+    end
+
+    def base_url
+      "https://#{@team}.slack.com"
     end
   end
 end
