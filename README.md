@@ -68,6 +68,6 @@ Some of the issues while Slack is in beta:
 
 ## License
 
-Copyright (c) 2013 Dan Sosedoff
+Copyright (c) 2013-2014 Dan Sosedoff, <dan.sosedoff@gmail.com>
 
 MIT License
