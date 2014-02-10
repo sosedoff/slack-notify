@@ -96,6 +96,8 @@ describe SlackNotify::Client do
     end
 
     context "with settings from environment variables" do
+      let(:vars) { ["SLACK_TEAM", "SLACK_TOKEN", "SLACK_CHANNEL", "SLACK_USER"] }
+
       let(:client) do
         described_class.new(ENV["SLACK_TEAM"], ENV["SLACK_TOKEN"], {
           channel: ENV["SLACK_CHANNEL"],
@@ -104,19 +106,12 @@ describe SlackNotify::Client do
       end
 
       before do
-        ENV["SLACK_TEAM"]    = "foo"
-        ENV["SLACK_TOKEN"]   = "bar"
-        ENV["SLACK_CHANNEL"] = "chan"
-        ENV["SLACK_USER"]    = "bot"
-
+        vars.each { |v| ENV[v] = "foobar" }
         client.stub(:send_payload) { true }
       end
 
       after do
-        ENV.delete("SLACK_TEAM")
-        ENV.delete("SLACK_TOKEN")
-        ENV.delete("SLACK_CHANNEL")
-        ENV.delete("SLACK_USER")
+        vars.each { |v| ENV.delete(v) }
       end
 
       it "sends data to channel specified by environment variables" do
