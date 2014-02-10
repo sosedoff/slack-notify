@@ -24,8 +24,10 @@ module SlackNotify
     def notify(text, channel = nil)
       channels = [channel || @channel].flatten.compact.uniq
 
-      channels.each do |chan|
-        chan.prepend("#") if chan[0] != "#"
+      channels.each do |c|
+        chan = c
+        chan = "##{chan}" if chan[0] != "#"
+        
         send_payload(text: text, username: @username, channel: chan)
       end
 
