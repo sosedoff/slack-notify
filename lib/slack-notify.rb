@@ -22,12 +22,7 @@ module SlackNotify
     end
 
     def notify(text, channel = nil)
-      channels = [channel || @channel].flatten.compact.uniq
-
-      channels.each do |c|
-        chan = c
-        chan = "##{chan}" if chan[0] != "#"
-        
+      format_channel(channel).each do |chan|
         send_payload(text: text, username: @username, channel: chan)
       end
 
@@ -35,6 +30,12 @@ module SlackNotify
     end
 
     private
+
+    def format_channel(channel)
+      [channel || @channel].flatten.compact.uniq.map do |name|
+        name[0] != "#" ? "##{name}" : name
+      end
+    end
 
     def send_payload(payload)
       conn = Faraday.new(hook_url, { timeout: 5, open_timeout: 5 }) do |c|
