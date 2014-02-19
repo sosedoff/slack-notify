@@ -61,10 +61,10 @@ client.notify("Message", ["#channel1", "#channel2"])
 
 ## Gotchas
 
-Some of the issues while Slack is in beta:
+Current issues with Slack API:
 
-- No message raised if domain is not valid
-- Slack raises error 500 on bad request
+- No message raised if team subdomain is invalid
+- 500 server error is raised on bad requests
 
 ## License
 
