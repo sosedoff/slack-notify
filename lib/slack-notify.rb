@@ -33,7 +33,7 @@ module SlackNotify
 
     def format_channel(channel)
       [channel || @channel].flatten.compact.uniq.map do |name|
-        name[0] != "#" ? "##{name}" : name
+        name[0].match(/^(#|@)/) && name || "##{name}"
       end
     end
 
