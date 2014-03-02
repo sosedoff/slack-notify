@@ -59,6 +59,12 @@ client.notify("Another message", "#channel2")
 client.notify("Message", ["#channel1", "#channel2"])
 ```
 
+Send direct message:
+
+```ruby
+client.notify("Hello There!", "@username")
+```
+
 ## Gotchas
 
 Current issues with Slack API:
