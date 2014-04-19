@@ -11,11 +11,12 @@ module SlackNotify
     include SlackNotify::Connection
 
     def initialize(team, token, options = {})
-      @team     = team
-      @token    = token
-      @username = options[:username]
-      @channel  = options[:channel]
-      @icon_url = options[:icon_url]
+      @team       = team
+      @token      = token
+      @username   = options[:username]
+      @channel    = options[:channel]
+      @icon_url   = options[:icon_url]
+      @icon_emoji = options[:icon_emoji]
 
       validate_arguments
     end
@@ -27,10 +28,11 @@ module SlackNotify
     def notify(text, channel = nil)
       delivery_channels(channel).each do |chan|
         payload = SlackNotify::Payload.new(
-          text: text,
-          channel: chan,
-          username: @username,
-          icon_url: @icon_url
+          text:       text,
+          channel:    chan,
+          username:   @username,
+          icon_url:   @icon_url,
+          icon_emoji: @icon_emoji
         )
 
         send_payload(payload)

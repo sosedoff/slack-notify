@@ -86,6 +86,21 @@ describe SlackNotify::Client do
       end
     end
 
+    context "when icon_emoji is set" do
+      let(:client) { described_class.new("foo", "bar", icon_emoji: "foobar") }
+
+      before do
+        stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=bar").
+          with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"icon_emoji\":\"foobar\"}"=>true},
+              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.8.9'}).
+          to_return(:status => 200, :body => "", :headers => {})
+      end
+
+      it "includes icon in payload" do
+        client.notify("Message")
+      end
+    end
+
     context "with multiple channels" do
       before do
         client.stub(:send_payload) { true }
