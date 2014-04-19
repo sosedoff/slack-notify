@@ -23,68 +23,20 @@ describe SlackNotify::Client do
   end
 
   describe "#test" do
-    let(:client) do
-      described_class.new("foo", "token")
-    end
-
-    let(:payload) do
-      {
-        text: "This is a test message!",
-        channel: "#general",
-        username: "webhookbot"
-      }
-    end
+    let(:client) { described_class.new("foo", "token") }
 
     before do
-      client.stub(:send_payload) { true }
+      client.stub(:notify)
+      client.test
     end
 
-    it "sends a test payload" do
-      expect(client).to receive(:send_payload).with(payload)
-      client.test
+    it "it sends a test message" do
+      expect(client).to have_received(:notify).with("Test Message")
     end
   end
 
   describe "#notify" do
-    let(:client) do
-      described_class.new("foo", "token")
-    end
-
-    it "sends message to default channel" do
-      client.stub(:send_payload) { true }
-
-      expect(client).to receive(:send_payload).with(
-        text: "Message",
-        channel: "#general",
-        username: "webhookbot"
-      )
-
-      client.notify("Message")
-    end
-
-    it "sends message as default user" do
-      client.stub(:send_payload) { true }
-
-      expect(client).to receive(:send_payload).with(
-        text: "Message",
-        channel: "#general",
-        username: "webhookbot"
-      )
-
-      client.notify("Message")
-    end
-
-    it "sends message to a specified channel" do
-      client.stub(:send_payload) { true }
-
-      expect(client).to receive(:send_payload).with(
-        text: "Message",
-        channel: "#mychannel",
-        username: "webhookbot"
-      )
-
-      client.notify("Message", "#mychannel")
-    end
+    let(:client) { described_class.new("foo", "token") }
 
     it "delivers payload" do
       stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
@@ -122,31 +74,11 @@ describe SlackNotify::Client do
     context "with multiple channels" do
       before do
         client.stub(:send_payload) { true }
+        client.notify("Message", ["#channel1", "#channel2"])
       end
 
       it "delivers payload to multiple channels" do
-        expect(client).to receive(:send_payload).exactly(2).times
-        client.notify("Message", ["#channel1", "#channel2"])
-      end
-    end
-
-    context "when pound symbol is missing" do
-      before { client.stub(:send_payload).and_return(true) }
-
-      it "adds pound symbol to channel name" do
-        expect(client).to receive(:send_payload).with(text: "Message", username: "webhookbot", channel: "#foobar")
-        client.notify("Message", "foobar")
-      end
-    end
-
-    context "when direct message" do
-      before do
-        client.stub(:send_payload).and_return(true)
-        client.notify("Message", "@user")
-      end
-
-      it "sends payload to a user" do
-        expect(client).to have_received(:send_payload).with(text: "Message", username: "webhookbot", channel: "@user")
+        expect(client).to have_received(:send_payload).exactly(2).times
       end
     end
 

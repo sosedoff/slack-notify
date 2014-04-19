@@ -1,5 +1,6 @@
 require "slack-notify/version"
 require "slack-notify/error"
+require "slack-notify/payload"
 
 require "json"
 require "faraday"
@@ -9,20 +10,27 @@ module SlackNotify
     def initialize(team, token, options = {})
       @team     = team
       @token    = token
-      @username = options[:username] || "webhookbot"
-      @channel  = options[:channel]  || "#general"
+      @username = options[:username]
+      @channel  = options[:channel]
       @icon_url = options[:icon_url]
 
       validate_arguments
     end
 
     def test
-      notify("This is a test message!")
+      notify("Test Message")
     end
 
     def notify(text, channel = nil)
-      format_channel(channel).each do |chan|
-        send_payload(text: text, username: @username, channel: chan)
+      delivery_channels(channel).each do |chan|
+        payload = SlackNotify::Payload.new(
+          text: text,
+          channel: chan,
+          username: @username,
+          icon_url: @icon_url
+        )
+
+        send_payload(payload)
       end
 
       true
@@ -30,16 +38,14 @@ module SlackNotify
 
     private
 
+    def delivery_channels(channel)
+      [channel || @channel || "#general"].flatten.compact.uniq
+    end
+
     def validate_arguments
       raise ArgumentError, "Team name required" if @team.nil?
       raise ArgumentError, "Token required"     if @token.nil?
       raise ArgumentError, "Invalid team name"  unless valid_team_name?
-    end
-
-    def format_channel(channel)
-      [channel || @channel].flatten.compact.uniq.map do |name|
-        name[0].match(/^(#|@)/) && name || "##{name}"
-      end
     end
 
     def send_payload(payload)
@@ -49,7 +55,7 @@ module SlackNotify
       end
 
       response = conn.post do |req|
-        req.body = JSON.dump(payload)
+        req.body = JSON.dump(payload.to_hash)
       end
 
       handle_response(response)
