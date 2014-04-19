@@ -38,14 +38,18 @@ module SlackNotify
 
     private
 
-    def delivery_channels(channel)
-      [channel || @channel || "#general"].flatten.compact.uniq
-    end
-
     def validate_arguments
       raise ArgumentError, "Team name required" if @team.nil?
       raise ArgumentError, "Token required"     if @token.nil?
       raise ArgumentError, "Invalid team name"  unless valid_team_name?
+    end
+
+    def valid_team_name?
+      @team =~ /^[a-z\d\-]+$/ ? true : false
+    end
+
+    def delivery_channels(channel)
+      [channel || @channel || "#general"].flatten.compact.uniq
     end
 
     def send_payload(payload)
@@ -69,10 +73,6 @@ module SlackNotify
           raise SlackNotify::Error.new(response.body)
         end
       end
-    end
-
-    def valid_team_name?
-      @team =~ /^[a-z\d\-]+$/ ? true : false
     end
 
     def hook_url
