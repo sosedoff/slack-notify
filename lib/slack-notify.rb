@@ -11,6 +11,7 @@ module SlackNotify
       @token    = token
       @username = options[:username] || "webhookbot"
       @channel  = options[:channel]  || "#general"
+      @icon_url = options[:icon_url]
 
       validate_arguments
     end
