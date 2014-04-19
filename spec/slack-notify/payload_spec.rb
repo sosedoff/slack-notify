@@ -6,7 +6,8 @@ describe SlackNotify::Payload do
       username: "foo",
       channel: "#bar",
       text: "hola",
-      icon_url: "http://domain.com/image.png"
+      icon_url: "http://domain.com/image.png",
+      icon_emoji: ":chart_with_upwards_trend:"
     }
   end
 
@@ -28,6 +29,10 @@ describe SlackNotify::Payload do
 
       it "sets icon url" do
         expect(payload.icon_url).to eq "http://domain.com/image.png"
+      end
+
+      it "sets icon emoji" do
+        expect(payload.icon_emoji).to eq ":chart_with_upwards_trend:"
       end
 
       context "on missing pound in channel" do
@@ -71,6 +76,7 @@ describe SlackNotify::Payload do
       expect(hash).to eq Hash(
         channel: "#bar",
         icon_url: "http://domain.com/image.png",
+        icon_emoji: ":chart_with_upwards_trend:",
         text: "hola",
         username: "foo"
       )
@@ -83,6 +89,16 @@ describe SlackNotify::Payload do
 
       it "excludes icon_url" do
         expect(hash.keys).not_to include "icon_url"
+      end
+    end
+
+    context "when icon emoji is not set" do
+      before do
+        options[:icon_emoji] = nil
+      end
+
+      it "excludes icon_emoji" do
+        expect(hash.keys).not_to include "icon_emoji"
       end
     end
   end
