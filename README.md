@@ -70,6 +70,12 @@ Send direct message:
 client.notify("Hello There!", "@username")
 ```
 
+You can also test gem via rake console:
+
+```
+rake console
+```
+
 ## Gotchas
 
 Current issues with Slack API:
