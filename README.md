@@ -2,6 +2,9 @@
 
 Send notifications to [Slack](http://slack.com/)
 
+[![Build Status](https://travis-ci.org/sosedoff/slack-notify.png?branch=master)](https://travis-ci.org/sosedoff/slack-notify)
+[![Code Climate](https://codeclimate.com/github/sosedoff/slack-notify.png)](https://codeclimate.com/github/sosedoff/slack-notify)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -41,7 +44,9 @@ Initialize with options:
 ```ruby
 client = SlackNotify::Client.new("team", "token", {
   channel: "#development",
-  username: "mybot"
+  username: "mybot",
+  icon_url: "http://mydomain.com/myimage.png",
+  icon_emoji: ":shipit:"
 })
 ```
 
