@@ -12,9 +12,7 @@ module SlackNotify
       @username = options[:username] || "webhookbot"
       @channel  = options[:channel]  || "#general"
 
-      raise ArgumentError, "Team name required" if @team.nil?
-      raise ArgumentError, "Token required"     if @token.nil?
-      raise ArgumentError, "Invalid team name"  unless valid_team_name?
+      validate_arguments
     end
 
     def test
@@ -30,6 +28,12 @@ module SlackNotify
     end
 
     private
+
+    def validate_arguments
+      raise ArgumentError, "Team name required" if @team.nil?
+      raise ArgumentError, "Token required"     if @token.nil?
+      raise ArgumentError, "Invalid team name"  unless valid_team_name?
+    end
 
     def format_channel(channel)
       [channel || @channel].flatten.compact.uniq.map do |name|
