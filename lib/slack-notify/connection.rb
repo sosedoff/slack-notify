@@ -9,7 +9,7 @@ module SlackNotify
       end
 
       response = conn.post do |req|
-        req.body                 = JSON.dump(payload.to_hash)
+        req.body = JSON.dump(payload.to_hash)
       end
 
       handle_response(response)
