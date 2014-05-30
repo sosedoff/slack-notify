@@ -1,9 +1,11 @@
 module SlackNotify
   module Connection
     def send_payload(payload)
-      conn = Faraday.new(hook_url, { timeout: 5, open_timeout: 5 }) do |c|
+      conn = Faraday.new(hook_url) do |c|
         c.use(Faraday::Request::UrlEncoded)
         c.adapter(Faraday.default_adapter)
+        c.options.timeout      = 5
+        c.options.open_timeout = 5
       end
 
       response = conn.post do |req|
