@@ -110,7 +110,7 @@ describe SlackNotify::Payload do
 
     context "when link_names is not set" do
       before do
-        options[:icon_emoji] = nil
+        options[:link_names] = nil
       end
 
       it "excludes link_names" do
