@@ -12,6 +12,7 @@ module SlackNotify
       @channel    = options[:channel]
       @icon_url   = options[:icon_url]
       @icon_emoji = options[:icon_emoji]
+      @link_names = options[:link_names]
 
       validate_arguments
     end
@@ -27,7 +28,8 @@ module SlackNotify
           channel:    chan,
           username:   @username,
           icon_url:   @icon_url,
-          icon_emoji: @icon_emoji
+          icon_emoji: @icon_emoji,
+          link_names: @link_names
         )
 
         send_payload(payload)
