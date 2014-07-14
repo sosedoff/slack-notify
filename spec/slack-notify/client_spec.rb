@@ -101,6 +101,21 @@ describe SlackNotify::Client do
       end
     end
 
+    context "when link_names is set" do
+      let(:client) { described_class.new("foo", "bar", link_names: 1) }
+
+      before do
+        stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=bar").
+          with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"link_names\":1}"=>true},
+              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.0'}).
+          to_return(:status => 200, :body => "", :headers => {})
+      end
+
+      it "includes link_names in payload" do
+        client.notify("Message")
+      end
+    end
+
     context "with multiple channels" do
       before do
         client.stub(:send_payload) { true }
