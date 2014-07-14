@@ -46,7 +46,8 @@ client = SlackNotify::Client.new("team", "token", {
   channel: "#development",
   username: "mybot",
   icon_url: "http://mydomain.com/myimage.png",
-  icon_emoji: ":shipit:"
+  icon_emoji: ":shipit:",
+  link_names: 1
 })
 ```
 
