@@ -2,8 +2,9 @@
 
 Send notifications to [Slack](http://slack.com/)
 
-[![Build Status](https://travis-ci.org/sosedoff/slack-notify.png?branch=master)](https://travis-ci.org/sosedoff/slack-notify)
-[![Code Climate](https://codeclimate.com/github/sosedoff/slack-notify.png)](https://codeclimate.com/github/sosedoff/slack-notify)
+[![Build Status](http://img.shields.io/travis/sosedoff/slack-notify/master.svg?style=flat)](https://travis-ci.org/sosedoff/slack-notify)
+[![Code Climate](http://img.shields.io/codeclimate/github/sosedoff/slack-notify.svg?style=flat)](https://codeclimate.com/github/sosedoff/slack-notify)
+[![Gem Version](http://img.shields.io/gem/v/slack-notify.svg?style=flat)](http://rubygems.org/gems/slack-notify)
 
 ## Installation
 
