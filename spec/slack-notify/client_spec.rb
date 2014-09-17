@@ -20,6 +20,14 @@ describe SlackNotify::Client do
           to raise_error "Invalid team name"
       end
     end
+
+    it "does not raise error on valid team name" do
+      names = ["foo", "Foo", "foo-bar"]
+
+      names.each do |name|
+        expect { described_class.new(name, "token") }.not_to raise_error
+      end
+    end
   end
 
   describe "#test" do

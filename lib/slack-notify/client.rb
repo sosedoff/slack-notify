@@ -47,7 +47,7 @@ module SlackNotify
     end
 
     def valid_team_name?
-      @team =~ /^[a-z\d\-]+$/ ? true : false
+      @team =~ /^[a-z\d\-]+$/i ? true : false
     end
 
     def delivery_channels(channel)
