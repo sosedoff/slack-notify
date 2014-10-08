@@ -84,6 +84,7 @@ describe SlackNotify::Payload do
         icon_emoji: ":chart_with_upwards_trend:",
         link_names: 1,
         text: "hola",
+        unfurl_links: "1",
         username: "foo"
       )
     end

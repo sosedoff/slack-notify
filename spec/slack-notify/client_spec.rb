@@ -48,7 +48,7 @@ describe SlackNotify::Client do
 
     it "delivers payload" do
       stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
-         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\"}"=>true},
+         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
          to_return(:status => 200, :body => "", :headers => {})
 
@@ -84,7 +84,7 @@ describe SlackNotify::Client do
 
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=bar").
-          with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"icon_url\":\"foobar\"}"=>true},
+          with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"icon_url\":\"foobar\",\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.0'}).
           to_return(:status => 200, :body => "", :headers => {})
       end
@@ -99,7 +99,7 @@ describe SlackNotify::Client do
 
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=bar").
-          with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"icon_emoji\":\"foobar\"}"=>true},
+          with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"icon_emoji\":\"foobar\",\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.0'}).
           to_return(:status => 200, :body => "", :headers => {})
       end
@@ -114,7 +114,7 @@ describe SlackNotify::Client do
 
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=bar").
-          with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"link_names\":1}"=>true},
+          with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"link_names\":1,\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.0'}).
           to_return(:status => 200, :body => "", :headers => {})
       end
@@ -138,7 +138,7 @@ describe SlackNotify::Client do
     context "when team name is invalid" do
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
-         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\"}"=>true},
+         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
          to_return(:status => 404, :body => "Line 1\nLine 2\nLine 3", :headers => {})
       end
@@ -151,7 +151,7 @@ describe SlackNotify::Client do
     context "when token is invalid" do
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
-         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\"}"=>true},
+         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
          to_return(:status => 500, :body => "No hooks", :headers => {})
       end
@@ -165,7 +165,7 @@ describe SlackNotify::Client do
     context "when channel is invalid" do
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
-         with(:body => {"{\"text\":\"message\",\"username\":\"webhookbot\",\"channel\":\"#foobar\"}"=>true},
+         with(:body => {"{\"text\":\"message\",\"username\":\"webhookbot\",\"channel\":\"#foobar\",\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
          to_return(:status => 500, :body => "Invalid channel specified", :headers => {})
       end
