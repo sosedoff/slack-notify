@@ -26,7 +26,7 @@ module SlackNotify
     end
 
     def hook_url
-      "#{base_url}/services/hooks/incoming-webhook?token=#{@token}"
+      @webhook_url || "#{base_url}/services/hooks/incoming-webhook?token=#{@token}"
     end
 
     def base_url

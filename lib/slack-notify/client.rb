@@ -15,6 +15,10 @@ module SlackNotify
       @link_names   = options[:link_names]
       @unfurl_links = options[:unfurl_links] || "1"
 
+      if options[:webhook_url]
+        @webhook_url = options[:webhook_url]
+      end
+
       validate_arguments
     end
 
@@ -43,9 +47,11 @@ module SlackNotify
     private
 
     def validate_arguments
-      raise ArgumentError, "Team name required" if @team.nil?
-      raise ArgumentError, "Token required"     if @token.nil?
-      raise ArgumentError, "Invalid team name"  unless valid_team_name?
+      if @webhook_url.nil?
+        raise ArgumentError, "Team name required" if @team.nil?
+        raise ArgumentError, "Token required"     if @token.nil?
+        raise ArgumentError, "Invalid team name"  unless valid_team_name?
+      end
     end
 
     def valid_team_name?
