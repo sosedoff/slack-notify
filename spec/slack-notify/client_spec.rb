@@ -30,6 +30,12 @@ describe SlackNotify::Client do
         }.not_to raise_error
       end
     end
+
+    context "when :webhook_url option is present" do
+      it "does not raise errors" do
+        expect { described_class.new(webhook_url: "foobar") }.not_to raise_error
+      end
+    end
   end
 
   describe "#test" do
@@ -55,6 +61,23 @@ describe SlackNotify::Client do
          to_return(:status => 200, :body => "", :headers => {})
 
       expect(client.notify("Message")).to eq true
+    end
+
+    context "when :webhook_url is set" do
+      let(:client) do
+        described_class.new(webhook_url: "https://hooks.slack.com/services/foo/bar")
+      end
+
+      before do
+        stub_request(:post, "https://hooks.slack.com/services/foo/bar").
+         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"unfurl_links\":\"1\"}"=>true},
+              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
+         to_return(:status => 200, :body => "", :headers => {})
+      end
+
+      it "delivers payload" do
+        expect(client.notify("Message")).to eq true
+      end
     end
 
     context "with settings from environment variables" do
