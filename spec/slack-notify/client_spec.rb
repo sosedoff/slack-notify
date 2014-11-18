@@ -2,44 +2,17 @@ require "spec_helper"
 
 describe SlackNotify::Client do
   describe "#initialize" do
-    it "requires team name" do
-      expect { described_class.new }.
-        to raise_error ArgumentError, "Team name required"
+    it "requires webhook_url" do
+      expect { described_class.new }.to raise_error ArgumentError, "Webhook URL required"
     end
 
-    it "requires token" do
-      expect { described_class.new(team: "foobar") }.
-        to raise_error ArgumentError, "Token required"
-    end
-
-    it "raises error on invalid team name" do
-      names = ["foo bar", "foo $bar", "foo.bar"]
-
-      names.each do |name|
-        expect { described_class.new(team: name, token: "token") }.
-          to raise_error "Invalid team name"
-      end
-    end
-
-    it "does not raise error on valid team name" do
-      names = ["foo", "Foo", "foo-bar"]
-
-      names.each do |name|
-        expect {
-          described_class.new(team: name, token: "token")
-        }.not_to raise_error
-      end
-    end
-
-    context "when :webhook_url option is present" do
-      it "does not raise errors" do
-        expect { described_class.new(webhook_url: "foobar") }.not_to raise_error
-      end
+    it "does not raise error when webhook_url is set" do
+      expect { described_class.new(webhook_url: "foobar") }.not_to raise_error
     end
   end
 
   describe "#test" do
-    let(:client) { described_class.new(team: "foo", token: "token") }
+    let(:client) { described_class.new(webhook_url: "foobar") }
 
     before do
       client.stub(:notify)
@@ -52,67 +25,31 @@ describe SlackNotify::Client do
   end
 
   describe "#notify" do
-    let(:client) { described_class.new(team: "foo", token: "token") }
+    let(:client) do
+      described_class.new(webhook_url: "https://hooks.slack.com/services/foo/bar")
+    end
+
+    before do
+      stub_request(:post, "https://hooks.slack.com/services/foo/bar").
+       with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"unfurl_links\":\"1\"}"=>true},
+            :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
+       to_return(:status => 200, :body => "", :headers => {})
+    end
 
     it "delivers payload" do
-      stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
-         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"unfurl_links\":\"1\"}"=>true},
-              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
-         to_return(:status => 200, :body => "", :headers => {})
-
       expect(client.notify("Message")).to eq true
-    end
-
-    context "when :webhook_url is set" do
-      let(:client) do
-        described_class.new(webhook_url: "https://hooks.slack.com/services/foo/bar")
-      end
-
-      before do
-        stub_request(:post, "https://hooks.slack.com/services/foo/bar").
-         with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"unfurl_links\":\"1\"}"=>true},
-              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
-         to_return(:status => 200, :body => "", :headers => {})
-      end
-
-      it "delivers payload" do
-        expect(client.notify("Message")).to eq true
-      end
-    end
-
-    context "with settings from environment variables" do
-      let(:vars) { ["SLACK_TEAM", "SLACK_TOKEN", "SLACK_CHANNEL", "SLACK_USER"] }
-
-      let(:client) do
-        described_class.new(
-          team:     ENV["SLACK_TEAM"],
-          token:    ENV["SLACK_TOKEN"],
-          channel:  ENV["SLACK_CHANNEL"],
-          username: ENV["SLACK_USER"]
-        )
-      end
-
-      before do
-        vars.each { |v| ENV[v] = "foobar" }
-        client.stub(:send_payload) { true }
-      end
-
-      after do
-        vars.each { |v| ENV.delete(v) }
-      end
-
-      it "sends data to channel specified by environment variables" do
-        client.notify("Message")
-      end
     end
 
     context "when icon_url is set" do
       let(:client) do
-        described_class.new(team: "foo", token: "bar", icon_url: "foobar")
+        described_class.new(
+          webhook_url: "https://hooks.slack.com/services/foo/bar",
+          icon_url: "foobar"
+        )
       end
 
       before do
-        stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=bar").
+        stub_request(:post, "https://hooks.slack.com/services/foo/bar").
           with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"icon_url\":\"foobar\",\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.0'}).
           to_return(:status => 200, :body => "", :headers => {})
@@ -125,11 +62,14 @@ describe SlackNotify::Client do
 
     context "when icon_emoji is set" do
       let(:client) do
-        described_class.new(team: "foo", token: "bar", icon_emoji: "foobar")
+        described_class.new(
+          webhook_url: "https://hooks.slack.com/services/foo/bar",
+          icon_emoji: "foobar"
+        )
       end
 
       before do
-        stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=bar").
+        stub_request(:post, "https://hooks.slack.com/services/foo/bar").
           with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"icon_emoji\":\"foobar\",\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.0'}).
           to_return(:status => 200, :body => "", :headers => {})
@@ -142,11 +82,14 @@ describe SlackNotify::Client do
 
     context "when link_names is set" do
       let(:client) do
-        described_class.new(team: "foo", token: "bar", link_names: 1)
+        described_class.new(
+          webhook_url: "https://hooks.slack.com/services/foo/bar",
+          link_names: 1
+        )
       end
 
       before do
-        stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=bar").
+        stub_request(:post, "https://hooks.slack.com/services/foo/bar").
           with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"link_names\":1,\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.0'}).
           to_return(:status => 200, :body => "", :headers => {})
@@ -170,7 +113,7 @@ describe SlackNotify::Client do
 
     context "when team name is invalid" do
       before do
-        stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
+        stub_request(:post, "https://hooks.slack.com/services/foo/bar").
          with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
          to_return(:status => 404, :body => "Line 1\nLine 2\nLine 3", :headers => {})
@@ -183,7 +126,7 @@ describe SlackNotify::Client do
 
     context "when token is invalid" do
       before do
-        stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
+        stub_request(:post, "https://hooks.slack.com/services/foo/bar").
          with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
          to_return(:status => 500, :body => "No hooks", :headers => {})
@@ -197,7 +140,7 @@ describe SlackNotify::Client do
 
     context "when channel is invalid" do
       before do
-        stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
+        stub_request(:post, "https://hooks.slack.com/services/foo/bar").
          with(:body => {"{\"text\":\"message\",\"username\":\"webhookbot\",\"channel\":\"#foobar\",\"unfurl_links\":\"1\"}"=>true},
               :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
          to_return(:status => 500, :body => "Invalid channel specified", :headers => {})

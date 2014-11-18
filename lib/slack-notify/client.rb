@@ -6,8 +6,7 @@ module SlackNotify
     include SlackNotify::Connection
 
     def initialize(options = {})
-      @team         = options[:team]
-      @token        = options[:token]
+      @webhook_url  = options[:webhook_url]
       @username     = options[:username]
       @channel      = options[:channel]
       @icon_url     = options[:icon_url]
@@ -15,11 +14,9 @@ module SlackNotify
       @link_names   = options[:link_names]
       @unfurl_links = options[:unfurl_links] || "1"
 
-      if options[:webhook_url]
-        @webhook_url = options[:webhook_url]
+      if @webhook_url.nil?
+        raise ArgumentError, "Webhook URL required"
       end
-
-      validate_arguments
     end
 
     def test
@@ -45,18 +42,6 @@ module SlackNotify
     end
 
     private
-
-    def validate_arguments
-      if @webhook_url.nil?
-        raise ArgumentError, "Team name required" if @team.nil?
-        raise ArgumentError, "Token required"     if @token.nil?
-        raise ArgumentError, "Invalid team name"  unless valid_team_name?
-      end
-    end
-
-    def valid_team_name?
-      @team =~ /^[a-z\d\-]+$/i ? true : false
-    end
 
     def delivery_channels(channel)
       [channel || @channel || "#general"].flatten.compact.uniq
