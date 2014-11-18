@@ -5,9 +5,9 @@ module SlackNotify
   class Client
     include SlackNotify::Connection
 
-    def initialize(team, token, options = {})
-      @team         = team
-      @token        = token
+    def initialize(options = {})
+      @team         = options[:team]
+      @token        = options[:token]
       @username     = options[:username]
       @channel      = options[:channel]
       @icon_url     = options[:icon_url]

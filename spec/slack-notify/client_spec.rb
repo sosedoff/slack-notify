@@ -3,12 +3,12 @@ require "spec_helper"
 describe SlackNotify::Client do
   describe "#initialize" do
     it "requires team name" do
-      expect { described_class.new(nil, nil) }.
+      expect { described_class.new }.
         to raise_error ArgumentError, "Team name required"
     end
 
     it "requires token" do
-      expect { described_class.new("foobar", nil) }.
+      expect { described_class.new(team: "foobar") }.
         to raise_error ArgumentError, "Token required"
     end
 
@@ -16,7 +16,7 @@ describe SlackNotify::Client do
       names = ["foo bar", "foo $bar", "foo.bar"]
 
       names.each do |name|
-        expect { described_class.new(name, "token") }.
+        expect { described_class.new(team: name, token: "token") }.
           to raise_error "Invalid team name"
       end
     end
@@ -25,13 +25,15 @@ describe SlackNotify::Client do
       names = ["foo", "Foo", "foo-bar"]
 
       names.each do |name|
-        expect { described_class.new(name, "token") }.not_to raise_error
+        expect {
+          described_class.new(team: name, token: "token")
+        }.not_to raise_error
       end
     end
   end
 
   describe "#test" do
-    let(:client) { described_class.new("foo", "token") }
+    let(:client) { described_class.new(team: "foo", token: "token") }
 
     before do
       client.stub(:notify)
@@ -44,7 +46,7 @@ describe SlackNotify::Client do
   end
 
   describe "#notify" do
-    let(:client) { described_class.new("foo", "token") }
+    let(:client) { described_class.new(team: "foo", token: "token") }
 
     it "delivers payload" do
       stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=token").
@@ -59,10 +61,12 @@ describe SlackNotify::Client do
       let(:vars) { ["SLACK_TEAM", "SLACK_TOKEN", "SLACK_CHANNEL", "SLACK_USER"] }
 
       let(:client) do
-        described_class.new(ENV["SLACK_TEAM"], ENV["SLACK_TOKEN"], {
-          channel: ENV["SLACK_CHANNEL"],
+        described_class.new(
+          team:     ENV["SLACK_TEAM"],
+          token:    ENV["SLACK_TOKEN"],
+          channel:  ENV["SLACK_CHANNEL"],
           username: ENV["SLACK_USER"]
-        })
+        )
       end
 
       before do
@@ -80,7 +84,9 @@ describe SlackNotify::Client do
     end
 
     context "when icon_url is set" do
-      let(:client) { described_class.new("foo", "bar", icon_url: "foobar") }
+      let(:client) do
+        described_class.new(team: "foo", token: "bar", icon_url: "foobar")
+      end
 
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=bar").
@@ -95,7 +101,9 @@ describe SlackNotify::Client do
     end
 
     context "when icon_emoji is set" do
-      let(:client) { described_class.new("foo", "bar", icon_emoji: "foobar") }
+      let(:client) do
+        described_class.new(team: "foo", token: "bar", icon_emoji: "foobar")
+      end
 
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=bar").
@@ -110,7 +118,9 @@ describe SlackNotify::Client do
     end
 
     context "when link_names is set" do
-      let(:client) { described_class.new("foo", "bar", link_names: 1) }
+      let(:client) do
+        described_class.new(team: "foo", token: "bar", link_names: 1)
+      end
 
       before do
         stub_request(:post, "https://foo.slack.com/services/hooks/incoming-webhook?token=bar").
