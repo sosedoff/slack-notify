@@ -52,6 +52,12 @@ client = SlackNotify::Client.new("slack webhook url", {
 })
 ```
 
+Initialize via shorthand method:
+
+```ruby
+client = SlackNotify.new(options)
+```
+
 Send test request:
 
 ```ruby
