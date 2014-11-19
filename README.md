@@ -37,13 +37,13 @@ require "slack-notify"
 Initialize client:
 
 ```ruby
-client = SlackNotify::Client.new("team", "token")
+client = SlackNotify::Client.new("slack webhook url")
 ```
 
 Initialize with options:
 
 ```ruby
-client = SlackNotify::Client.new("team", "token", {
+client = SlackNotify::Client.new("slack webhook url", {
   channel: "#development",
   username: "mybot",
   icon_url: "http://mydomain.com/myimage.png",
@@ -77,13 +77,6 @@ You can also test gem via rake console:
 ```
 rake console
 ```
-
-## Gotchas
-
-Current issues with Slack API:
-
-- No message raised if team subdomain is invalid
-- 500 server error is raised on bad requests
 
 ## License
 
