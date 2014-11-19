@@ -1,6 +1,6 @@
 # slack-notify
 
-Send notifications to [Slack](http://slack.com/)
+Send notifications to [Slack](http://slack.com/) via webhooks.
 
 [![Build Status](http://img.shields.io/travis/sosedoff/slack-notify/master.svg?style=flat)](https://travis-ci.org/sosedoff/slack-notify)
 [![Code Climate](http://img.shields.io/codeclimate/github/sosedoff/slack-notify.svg?style=flat)](https://codeclimate.com/github/sosedoff/slack-notify)
