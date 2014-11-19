@@ -37,19 +37,20 @@ require "slack-notify"
 Initialize client:
 
 ```ruby
-client = SlackNotify::Client.new("slack webhook url")
+client = SlackNotify::Client.new(webhook_url: "slack webhook url")
 ```
 
 Initialize with options:
 
 ```ruby
-client = SlackNotify::Client.new("slack webhook url", {
+client = SlackNotify::Client.new(
+  webhook_url: "slack webhook url",
   channel: "#development",
   username: "mybot",
   icon_url: "http://mydomain.com/myimage.png",
   icon_emoji: ":shipit:",
   link_names: 1
-})
+)
 ```
 
 Initialize via shorthand method:
