@@ -51,7 +51,7 @@ describe SlackNotify::Client do
       before do
         stub_request(:post, "https://hooks.slack.com/services/foo/bar").
           with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"icon_url\":\"foobar\",\"unfurl_links\":\"1\"}"=>true},
-              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.0'}).
+              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
           to_return(:status => 200, :body => "", :headers => {})
       end
 
@@ -71,7 +71,7 @@ describe SlackNotify::Client do
       before do
         stub_request(:post, "https://hooks.slack.com/services/foo/bar").
           with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"icon_emoji\":\"foobar\",\"unfurl_links\":\"1\"}"=>true},
-              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.0'}).
+              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
           to_return(:status => 200, :body => "", :headers => {})
       end
 
@@ -91,7 +91,7 @@ describe SlackNotify::Client do
       before do
         stub_request(:post, "https://hooks.slack.com/services/foo/bar").
           with(:body => {"{\"text\":\"Message\",\"username\":\"webhookbot\",\"channel\":\"#general\",\"link_names\":1,\"unfurl_links\":\"1\"}"=>true},
-              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Faraday v0.9.0'}).
+              :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded'}).
           to_return(:status => 200, :body => "", :headers => {})
       end
 
