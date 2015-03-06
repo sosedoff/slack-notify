@@ -1,6 +1,12 @@
 module SlackNotify
   class Payload
-    attr_accessor :username, :text, :channel, :icon_url, :icon_emoji, :link_names, :unfurl_links
+    attr_accessor :username,
+                  :text,
+                  :channel,
+                  :icon_url,
+                  :icon_emoji,
+                  :link_names,
+                  :unfurl_links
 
     def initialize(options = {})
       @username     = options[:username] || "webhookbot"
